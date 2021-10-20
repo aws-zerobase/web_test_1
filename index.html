@@ -27,39 +27,46 @@
     </style>
     <script>
         // define the callAPI function that takes a first name and last name as parameters
-        var callAPI = (firstName, lastName) => {
+        var callAPI = (client_id, order, order_quantity, delivery_address) => {
             // instantiate a headers object
             var myHeaders = new Headers();
             // add content type header to object
             myHeaders.append("Content-Type", "application/json");
             // using built in JSON utility package turn object to string and store in a variable
-            var raw = JSON.stringify({ "firstName": firstName, "lastName": lastName });
+
+            var raw = JSON.stringify({ "client_id": client_id, "order_list": {order: order_quantity}, "delivery": {"address": delivery_address} });
             // create a JSON object with parameters for API call and store in a variable
             var requestOptions = {
-                method: 'POST',
+                method: "POST",
                 headers: myHeaders,
                 body: raw,
-                redirect: 'follow'
+                redirect: "follow"
             };
             // make API call with parameters and use promises to get response
             fetch("https://401k1ivfol.execute-api.ap-northeast-2.amazonaws.com/dev", requestOptions)
                 .then(response => response.text())
                 .then(result => alert(JSON.parse(result).body))
-                .catch(error => console.log('error', error));
+                .catch(error => console.log("error", error));
         }
     </script>
 </head>
 
 <body>
     <form>
-        <label>First Name :</label>
-        <input type="text" id="fName">
-        <label>Last Name :</label>
-        <input type="text" id="lName">
-        <!-- set button onClick method to call function we defined passing input values as parameters -->
+        <label>Client ID :</label>
+        <input type="text" id="client_id">
+        <br>
+        <label>Order :</label>
+        <input type="text" id="order">
+        <label>Order Quantity :</label>
+        <input type="text" id="order_quantity">
+        <br>
+        <label>Delivery Address :</label>
+        <input type="text" id="delivery_address">
+        <br>
         <button type="button"
-            onclick="callAPI(document.getElementById('fName').value,document.getElementById('lName').value)">Call
-            API</button>
+            onclick="callAPI(document.getElementById('client_id').value,document.getElementById('order').value,document.getElementById('order_quantity').value,document.getElementById('delivery_address').value)">Register
+            Order</button>
     </form>
 </body>
 

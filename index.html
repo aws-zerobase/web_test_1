@@ -42,7 +42,7 @@
         }
     </script>
     <script>
-        var callAPI_get_orders = (client_id) => {
+        var callAPI_get_orders = (client_id_query) => {
             var myHeaders = new Headers();
             myHeaders.append("Content-Type", "application/json");
             var requestOptions = {
@@ -50,9 +50,10 @@
                 headers: myHeaders,
                 redirect: "follow"
             };
-            ret = fetch("https://401k1ivfol.execute-api.ap-northeast-2.amazonaws.com/dev/orders?client_id=client1", requestOptions)
-                .then(response => JSON.parse(response.text()))
-                .then(result => alert(JSON.parse(result).body))
+            fetch("https://401k1ivfol.execute-api.ap-northeast-2.amazonaws.com/dev?" + new URLSearchParams({ client_id: client_id_query }))
+                .then(response => response.text())
+                .then(result => JSON.parse(result))
+                .then(body => createTable(body))
                 .catch(error => console.log("error", error));
         }
     </script>
@@ -94,7 +95,13 @@
             onclick="callAPI(document.getElementById('client_id').value,document.getElementById('order').value,document.getElementById('order_quantity').value,document.getElementById('delivery_address').value)">Register
             Order</button>
     </form>
-    <p><input type="button" value="query" onclick='createTable(callAPI_get_orders("client1"));'></p>
+    <form>
+        <label>Client ID:</label>
+        <input type="text" id="cleint_id_query">
+        <br>
+        <button type="button"
+            onclick="callAPI_get_orders(document.getElementById('cleint_id_query').value)">query</button>
+    </form>
 </body>
 
 </html>
